@@ -10,7 +10,6 @@ const signToken = (id) => {
 };
 
 const createSendToken = async (user, statusCode, req, res) => {
-  console.log(user)
   const token = signToken(user._id);
   user.token = token;
   await user.save();
@@ -56,78 +55,75 @@ exports.signin = async (req, res) => {
   }
 };
 
-exports.verifyOTP = async(req, res) => {
+exports.verifyOTP = async (req, res) => {
   try {
     const mobileNumber = req.body.phone;
     const otpValue = req.body.otp;
 
-    console.log(mobileNumber, otpValue)
+    console.log(mobileNumber, otpValue);
 
-    let otp = await Otp.findOne({ otpFor: mobileNumber, otpValue: otpValue })
-    console.log(otp)
+    let otp = await Otp.findOne({ otpFor: mobileNumber, otpValue: otpValue });
+    console.log(otp);
 
     if (!otp) {
       return res.status(400).json({
-        status: 'fail',
-        message: 'No otp found'
-      })
+        status: "fail",
+        message: "No otp found",
+      });
     }
 
-    let updatedAt = new Date(otp.updatedAt)
+    let updatedAt = new Date(otp.updatedAt);
     let expiresIn = new Date(
       updatedAt.setMinutes(updatedAt.getMinutes() + otp.otpExpiration)
-    )
+    );
 
-    if(new Date() < expiresIn){
-      let user = await User.findOne({ mobileNumber: mobileNumber })
-      await otp.remove()
-      
-      if(!user){
-        const newUser = await User.create({phone: mobileNumber})
+    if (new Date() < expiresIn) {
+      let user = await User.findOne({ mobileNumber: mobileNumber });
+      await otp.remove();
+
+      if (!user) {
+        const newUser = await User.create({ phone: mobileNumber });
 
         createSendToken(newUser, 201, req, res);
       }
 
       createSendToken(user, 201, req, res);
-
-
-    }else {
+    } else {
       return res.status(400).json({
-        status: 'fail',
-        message: 'OTP has been expired'
-      })
+        status: "fail",
+        message: "OTP has been expired",
+      });
     }
-  } catch (err){
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     res.status(400).json({
-      status: 'fail',
-      message: err
-    })
+      status: "fail",
+      message: err,
+    });
   }
-}
+};
 
-exports.isAvailable = async(req, res) => {
+exports.isAvailable = async (req, res) => {
   try {
     mobileNumber = req.body.phone;
-    const user = await User.findOne({phone: mobileNumber})
+    const user = await User.findOne({ phone: mobileNumber });
 
-    if(!user){
+    if (!user) {
       return res.status(200).json({
-        status: 'success',
+        status: "success",
         isAvailable: false,
-      })
+      });
     }
 
     return res.status(200).json({
-      status: 'success',
+      status: "success",
       isAvailable: true,
-      user
-    })
-
-  } catch (err){
+      user,
+    });
+  } catch (err) {
     res.status(400).json({
-      status: 'fail',
-      message: err
-    })
+      status: "fail",
+      message: err,
+    });
   }
-}
+};
