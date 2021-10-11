@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config({ path: './.env' });
-const app = require('./app');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./.env" });
+const app = require("./app");
 
 // let DB;
 // if (process.env.NODE_ENV === 'development') {
@@ -19,7 +19,12 @@ app.listen(port, () => {
 });
 
 mongoose
-  .connect(DB)
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
   .then((con) => {
-    console.log('DB connection successful');
+    console.log("DB connection successful");
   });

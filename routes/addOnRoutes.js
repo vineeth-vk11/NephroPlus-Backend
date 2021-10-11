@@ -6,7 +6,7 @@ router.route("/").post(addOnController.createNewAddOn);
 
 router.route("/all").get(addOnController.getAllAddOns);
 
-router.route("/single/:addOnId").get(addOnController.getAllAddOnById);
+router.route("/single/:addOnId").get(addOnController.getAddOnById);
 
 router.route("/update/:addOnId").post(addOnController.updateAddOnById);
 

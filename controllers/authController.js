@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const Otp = require("../models/otpModel");
 const generateOtp = require("../utils/generateOtp");
 
@@ -9,15 +10,17 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = async (user, statusCode, req, res) => {
-  const token = signToken(user._id);
-  user.token = token;
-  await user.save();
-  user.password = undefined;
+const createSendToken = async (user, userId, statusCode, req, res) => {
+  const token = signToken(userId);
+  // console.log(token, "token");
+  // user.token = token;
+  // await user.save();
+  // user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
     user,
+    token,
   });
 };
 
@@ -60,10 +63,7 @@ exports.verifyOTP = async (req, res) => {
     const mobileNumber = req.body.phone;
     const otpValue = req.body.otp;
 
-    console.log(mobileNumber, otpValue);
-
     let otp = await Otp.findOne({ otpFor: mobileNumber, otpValue: otpValue });
-    console.log(otp);
 
     if (!otp) {
       return res.status(400).json({
@@ -82,12 +82,18 @@ exports.verifyOTP = async (req, res) => {
       await otp.remove();
 
       if (!user) {
-        const newUser = await User.create({ phone: mobileNumber });
+        userIdCustom = new mongoose.Types.ObjectId();
 
-        createSendToken(newUser, 201, req, res);
+        const newUser = await User.create({
+          _id: userIdCustom,
+          mobileNumber: mobileNumber,
+          token: "",
+        });
+
+        createSendToken(newUser, userIdCustom, 201, req, res);
       }
 
-      createSendToken(user, 201, req, res);
+      createSendToken(user, user._id, 201, req, res);
     } else {
       return res.status(400).json({
         status: "fail",

@@ -4,6 +4,8 @@ const router = express.Router();
 
 router.route("/all").get(serviceController.getAllServices);
 
+router.route("/").post(serviceController.addService);
+
 router.route("/single/:serviceId").get(serviceController.getServiceById);
 
 router.route("/single/:serviceId").put(serviceController.updateServiceById);

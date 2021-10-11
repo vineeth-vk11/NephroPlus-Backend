@@ -8,12 +8,18 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
     },
-    price: {
+    totalAmount: {
       type: String,
     },
     location: {
       type: String,
     },
+    addOnes: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "AddOn",
+      },
+    ],
     date: {
       type: Date,
     },

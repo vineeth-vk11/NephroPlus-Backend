@@ -15,9 +15,9 @@ exports.getAllAddOns = async (req, res) => {
   }
 };
 
-exports.getAllAddOnById = async (req, res) => {
+exports.getAddOnById = async (req, res) => {
   try {
-    const addOns = await AddOn.findOne(req.params.addOnId);
+    const addOns = await AddOn.findById(req.params.addOnId);
     return res.status(200).json({
       status: "success",
       addOns,
