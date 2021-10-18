@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const Order = require("../models/orderModel");
 const User = require("../models/userModel");
+const Order = require("../models/orderModel");
+const { v4: uuidv4 } = require("uuid");
 
 exports.getAllOrdersOfAUser = async (req, res) => {
   try {
@@ -32,7 +33,21 @@ exports.getAllOrdersOfAUser = async (req, res) => {
 
 exports.createNewOrder = async (req, res) => {
   try {
+    const { addOns, totalAmount, userId } = req.body;
+    const orderId = uuidv4();
+    const newOrder = await Order.create({
+      addOns: addOns,
+      orderId: orderId,
+      totalAmount: totalAmount,
+      user: userId,
+    });
+
+    return res.status(201).json({
+      status: "success",
+      order: newOrder,
+    });
   } catch (err) {
+    console.log(err);
     return res.status(400).json({
       status: "fail",
       message: err,

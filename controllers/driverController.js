@@ -1,5 +1,4 @@
 const User = require("../models/userModel");
-const Order = requrie("../models/driverModel");
 
 exports.getAllAvailableDrivers = async (req, res) => {
   try {

@@ -27,4 +27,4 @@ const serviceSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Order", serviceSchema);
+module.exports = mongoose.model("Service", serviceSchema);

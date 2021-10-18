@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema(
     location: {
       type: String,
     },
-    addOnes: [
+    addOns: [
       {
         type: mongoose.Types.ObjectId,
         ref: "AddOn",
