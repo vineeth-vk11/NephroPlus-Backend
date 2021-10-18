@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "user",
-      enum: ["user", "qm", "driver"],
+      enum: ["user", "qm", "cm", "driver"],
     },
     token: {
       type: String,
