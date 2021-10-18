@@ -35,16 +35,13 @@ const orderSchema = new mongoose.Schema(
       type: String,
     },
     ro_start: {
-      type: Date,
-      default: Date.now(),
+      type: String,
     },
     ro_end: {
-      type: Date,
-      default: Date.now(),
+      type: String,
     },
-    driving_started: {
-      type: Date,
-      default: Date.now(),
+    driving_start: {
+      type: String,
     },
     start_km: {
       type: String,

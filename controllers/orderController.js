@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const Order = require("../models/orderModel");
 const { v4: uuidv4 } = require("uuid");
+const generateOtp = require("../utils/generateOtp");
 
 exports.getAllOrdersOfAUser = async (req, res) => {
   try {
@@ -38,11 +39,13 @@ exports.createNewOrder = async (req, res) => {
   try {
     const { addOns, totalAmount, userId } = req.body;
     const orderId = uuidv4();
+    const otpValue = generateOtp.generateOtp(4);
     const newOrder = await Order.create({
       addOns: addOns,
       orderId: orderId,
       totalAmount: totalAmount,
       user: userId,
+      otp: otpValue,
     });
 
     return res.status(201).json({
