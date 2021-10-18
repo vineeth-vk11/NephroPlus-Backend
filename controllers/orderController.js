@@ -8,13 +8,16 @@ exports.getAllOrdersOfAUser = async (req, res) => {
     const orders = await Order.aggregate([
       {
         $match: {
-          user: mongoose.Types.ObjectId(req.params.id),
+          user: mongoose.Types.ObjectId(req.params.userId),
         },
       },
       {
         $group: {
-          _id: {
-            status: "$status",
+          _id: "$status",
+          orders: {
+            $push: {
+              orderId: "$orderId",
+            },
           },
         },
       },
