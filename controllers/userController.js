@@ -2,12 +2,10 @@ const User = require("../models/userModel");
 
 exports.updateUserData = async (req, res) => {
   try {
-    const mobileNumber = req.body.phone;
-    const user = await User.findOneAndUpdate(
-      { mobileNumber: mobileNumber },
-      req.body,
-      { new: true }
-    );
+    const userId = req.params.userId;
+    const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
+      new: true,
+    });
 
     if (!user) {
       return res.status(400).json({});

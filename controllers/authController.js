@@ -25,7 +25,13 @@ exports.signin = async (req, res) => {
     const mobileNumber = req.body.phone;
     const otpValue = generateOtp.generateOtp(4);
 
+    let userExists = false;
+
     let otp = await Otp.findOne({ otpFor: mobileNumber });
+    const user = await User.findOne({ mobileNumber: mobileNumber });
+    if (user) {
+      userExists = true;
+    }
     if (!otp) {
       otp = new Otp({
         otpValue: otpValue,
@@ -44,6 +50,7 @@ exports.signin = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: otp,
+      userExists,
     });
   } catch (err) {
     console.log(err);
