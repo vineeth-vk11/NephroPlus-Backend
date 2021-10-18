@@ -12,15 +12,11 @@ const signToken = (id) => {
 
 const createSendToken = async (user, userId, statusCode, req, res) => {
   const token = signToken(userId);
-  // console.log(token, "token");
-  // user.token = token;
-  // await user.save();
-  // user.password = undefined;
-
-  res.status(statusCode).json({
+  user.token = token;
+  await user.save();
+  return res.status(statusCode).json({
     status: "success",
     user,
-    token,
   });
 };
 
@@ -87,10 +83,9 @@ exports.verifyOTP = async (req, res) => {
         const newUser = await User.create({
           _id: userIdCustom,
           mobileNumber: mobileNumber,
-          token: "",
         });
 
-        createSendToken(newUser, userIdCustom, 201, req, res);
+        return createSendToken(newUser, userIdCustom, 201, req, res);
       }
 
       createSendToken(user, user._id, 201, req, res);
@@ -101,7 +96,6 @@ exports.verifyOTP = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
     res.status(400).json({
       status: "fail",
       message: err,
